@@ -7,7 +7,7 @@ const streamStore = new StreamStoreImpl();
 const inboxMessages:SocialMessage[] = [];
 messageStore.onReceiveData('social_message', (message) => {
     console.log('Receive message', message);
-    inboxMessages.push(message);
+    inboxMessages.push(message as SocialMessage);
 });
 
 const chatRoom = streamStore.getStream('xxx');

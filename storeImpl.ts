@@ -1,7 +1,7 @@
 import { MessageStore, StreamStore, UserStore, Message, Stream, StoreDataCallback } from './interfaces';
 import { SocialMessageImpl } from './messageImpl';
 
-export class MessageStoreImpl<Message> implements MessageStore {
+export class MessageStoreImpl implements MessageStore {
     get(id:string) {
         return null;
     }
