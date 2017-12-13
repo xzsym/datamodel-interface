@@ -12,6 +12,18 @@ export class WallPostImpl implements WallPost {
         this.msgObj[id] = value;
     }
 
+    get clientId() {
+        return this.msgObj.clientId;
+    }
+
+    get streamId() {
+        return this.msgObj.streamId;
+    }
+
+    get ingestionDate() {
+        return this.msgObj.ingestionDate;
+    }
+
     batchUpdate() {
         let updates:object[] = [];
         const deferredModel: DeferredModel = {
@@ -51,8 +63,20 @@ export class SocialMessageImpl implements SocialMessage {
         this.msgObj[id] = value;
     }
 
-    getAttachments() {
-        return [];
+    get clientId() {
+        return this.msgObj.clientId;
+    }
+
+    get streamId() {
+        return this.msgObj.streamId;
+    }
+
+    get ingestionDate() {
+        return this.msgObj.ingestionDate;
+    }
+
+    get attachments() {
+        return this.msgObj.attachments;
     }
 
     batchUpdate() {

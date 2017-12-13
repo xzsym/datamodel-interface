@@ -3,10 +3,43 @@ import { Model, Collection } from './base';
 
 
 export interface Message extends Model {
+    clientId: string;
+    streamId: string;
+    ingestionDate: number;
+    // dateStamp: number;
+    // messageType: string;
+    // persistenceStatus: string;    
+}
+
+export interface MestroMessage extends Message {
+    event: string;
 }
 
 export interface SocialMessage extends Message {
-    getAttachments(): Array<Attachment>;
+    attachments: Attachment[];
+    // codeMedia: any[];
+    // customEntities: any[];
+    // displayType: string;
+    // entities: object;
+    // externalOrigination: boolean;
+    // format: string;
+    // ignoreDLPWarning: boolean;
+    // images: object;
+    // isChime: boolean;
+    // isHighlighted: boolean;
+    // isReadByMe: boolean;
+    // isReadByOthers: boolean;
+    // isSuppressed: boolean;
+    // jsonMedia: any[];
+    // oboDelegateId: string | null;
+    // semVersion: string;
+    // shareMessageId: string | null;
+    // smallImage: string | null;
+    // socialStatus: object;
+    // text: string;
+    // userId: number;
+    // userPrettyName: string;
+    // userVerifiedForBadge: boolean;
 }
 
 export interface WallPost extends Message {
@@ -55,6 +88,8 @@ export interface UserStore extends Store<User> {
 }
 
 export interface StreamStore extends Store<Stream> {
+    messageStore: MessageStore;
+    userStore: UserStore;
     getStream(id: string): Stream | null;
     addStream(stream: Stream): void;
 }

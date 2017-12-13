@@ -1,8 +1,9 @@
-import { MessageStoreImpl, StreamStoreImpl } from './storeImpl';
+import { MessageStoreImpl, StreamStoreImpl, UserStoreImpl } from './storeImpl';
 import { SocialMessage } from './interfaces';
 
 const messageStore = new MessageStoreImpl();
-const streamStore = new StreamStoreImpl();
+const userStore = new UserStoreImpl();
+const streamStore = new StreamStoreImpl(messageStore, userStore);
 
 const inboxMessages:SocialMessage[] = [];
 messageStore.onReceiveData('social_message', (message) => {

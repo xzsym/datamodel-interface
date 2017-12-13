@@ -21,6 +21,13 @@ export class MessageStoreImpl implements MessageStore {
 
 export class StreamStoreImpl implements StreamStore {
     private streams:{ [key: string]: Stream }
+    messageStore: MessageStore;
+    userStore: UserStore;
+    constructor(messageStore: MessageStore, userStore: UserStore) {
+        this.messageStore = messageStore;
+        this.userStore = userStore;
+    }
+
     get(id:string) {
         return null;
     }
