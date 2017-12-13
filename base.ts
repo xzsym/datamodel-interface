@@ -13,17 +13,17 @@ enum CollectionEvent {
     onDeleted = "onDeleted",
 }
 
-interface ModelCallback<T> {
-    (model: T, prop: string);
+export interface ModelCallback<T> {
+    (model: T, prop: string):void;
 }
 
-interface CollectionCallback<T> {
-    (models: T);
+export interface CollectionCallback<T> {
+    (models: T):void;
 }
 
-interface DefferedModel {
-    set(name: string, value: any);
-    save();
+export interface DeferredModel {
+    set(name: string, value: any):DeferredModel;
+    save():void;
 }
 
 /**
@@ -31,19 +31,19 @@ interface DefferedModel {
  * to the changes of data
  */
 export interface Model {
-    onChange(eventName: ModelEvent, prop: string, changeFunction: ModelCallback<Model>);
-    get(name: string): Model;
-    set(name: string, val: any);
-    batchUpdate(): DefferedModel;
-    toJSON();
-    toImmutableJS();
+    onChange(eventName: ModelEvent, prop: string, changeFunction: ModelCallback<Model>):void;
+    get(name: string): any;
+    set(name: string, val: any):void;
+    batchUpdate(): DeferredModel;
+    toJSON():Object;
+    toImmutableJS():Object;
 }
 
 export interface Collection<T> {
     size(): number;
-    get(id: string): T;
-    add(item: T);
-    delete(id: string);
-    onChange(eventName: CollectionEvent, callback: CollectionCallback<T>);
+    get(id: string): T | null;
+    add(item: T):void;
+    delete(id: string):boolean;
+    onChange(eventName: CollectionEvent, callback: CollectionCallback<T>):void;
     toList(): Array<T>;
 }

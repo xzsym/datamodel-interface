@@ -11,8 +11,8 @@
     "rm-npm": "0.0.9"
   },
   "scripts": {
-    "clean": "rm *.js",
-    "compile": "tsc app.ts",
+    "clean": "rm dist/*.js",
+    "compile": "tsc",
     "build": "npm-run-all clean compile --continue-on-error",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
