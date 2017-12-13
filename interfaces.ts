@@ -22,8 +22,9 @@ interface NewMessageCallback {
 export interface Stream extends Model {
     getMessages(from: number, count: number): Array<SocialMessage>;
     getMembers(): Collection<User>;
+    sendReceipt(messages:Message[]): Promise<object>;
 
-    uploadAttachment(): Promise<Attachment>;
+    uploadAttachment(attachment:Attachment): Promise<Attachment>;
     sendMessage(): Promise<Message>;
     onNewMessage(callback:NewMessageCallback): void;
 }

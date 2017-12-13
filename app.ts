@@ -13,7 +13,7 @@ messageStore.onReceiveData('social_message', (message) => {
 const chatRoom = streamStore.getStream('xxx');
 if (chatRoom) {
     chatRoom.onNewMessage((message) => {
-        console.log('Receiving new message');
+        console.log('Receiving new message', message);
     });
     
     const messages = chatRoom.getMessages(0, 50).map((message) => {
@@ -21,5 +21,5 @@ if (chatRoom) {
         return message;
     });
     
-    // TODO batch update the messages to mark then as read
+    chatRoom.sendReceipt(messages);
 }

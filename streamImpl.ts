@@ -1,5 +1,8 @@
 import { User, Stream, SocialMessage } from './interfaces';
 import { CollectionBase } from './baseImpl';
+import { SocialMessageImpl } from './messageImpl';
+import { Transport } from './requests';
+
 
 export class StreamImpl implements Stream {
 
@@ -26,19 +29,27 @@ export class StreamImpl implements Stream {
         return null;
     }
 
-    uploadAttachment() {
-
+    uploadAttachment(attachment) {
+        return Promise.resolve(attachment);
     }
 
     sendMessage() {
-
+        return Promise.resolve(new SocialMessageImpl());
     }
 
     onNewMessage(newMessageCallback) {
 
     }
 
-    toJSON() {}
-    toImmutableJS() {}
+    sendReceipt(messages) {
+        return Transport.execute('SendReceipt', { messages });
+    }
+
+    toJSON() {
+        return {};
+    }
+    toImmutableJS() {
+        return {};
+    }
     
 }
