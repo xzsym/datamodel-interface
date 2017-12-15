@@ -1,26 +1,43 @@
-import { MessageStoreImpl, StreamStoreImpl, UserStoreImpl } from './storeImpl';
+import { MessageStore, StreamStoreImpl, UserStoreImpl } from './storeImpl';
 import { SocialMessage } from './interfaces';
+import { SocialMessageImpl } from './messageImpl';
 
-const messageStore = new MessageStoreImpl();
+const messageStore = new MessageStore();
 const userStore = new UserStoreImpl();
 const streamStore = new StreamStoreImpl(messageStore, userStore);
 
 const inboxMessages:SocialMessage[] = [];
-messageStore.onReceiveData('social_message', (message) => {
-    console.log('Receive message', message);
-    inboxMessages.push(message as SocialMessage);
+messageStore.start();
+
+streamStore.get('yy').then((chatRoom) => {
+    if (chatRoom) {
+        chatRoom.onNewMessage((message) => {
+            console.log(`Chatroom ${chatRoom.id} receives a new message`, message);
+        });
+        
+        const messages = chatRoom.getMessages(0, 0, 50).then((messages) => {
+            console.log('All the messages:', messages);
+            return messages;
+        }).then((messages) => {
+            chatRoom.sendReceipt(messages);
+        });
+    }
 });
 
-const chatRoom = streamStore.getStream('xxx');
-if (chatRoom) {
-    chatRoom.onNewMessage((message) => {
-        console.log('Receiving new message', message);
-    });
+streamStore.get('xx').then((im) => {
+    if (im) {
+        im.onNewMessage((message) => {
+            console.log(`IM ${im.id} receives a new message`, message);
+        });
+
+        im.sendMessage(new SocialMessageImpl({
+            id: Date.now(),
+            text: `User input message`,
+            streamId: im.id
+        }));
+    }
     
-    const messages = chatRoom.getMessages(0, 50).map((message) => {
-        console.log(message);
-        return message;
-    });
-    
-    chatRoom.sendReceipt(messages);
-}
+});
+
+
+

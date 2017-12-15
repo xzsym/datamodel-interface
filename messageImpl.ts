@@ -1,15 +1,20 @@
-import { ModelCallback, DeferredModel } from './base';
-import { WallPost, SocialMessage } from './interfaces';
+import { ModelCallback, ModelEvent } from './base';
+import { WallPost, SocialMessage, WritableSocialMessageProps, WritableWallPostMessageProps } from './interfaces';
+import { batchNotifyListeners } from './utils';
 
 export class WallPostImpl implements WallPost {
-    private msgObj: {[key:string]: any};
+    private msgObj: {[key:string]: any}
+    private listeners : {[key:string]: ModelCallback<SocialMessage>[]}
 
-    get(id:string) {
-        return this.msgObj[id];
+    constructor(props: {[key:string]: any}) {
+        for (let key of props.keys()) {
+            this.msgObj[key] = props;
+        }
+        this.listeners = {};
     }
 
-    set(id:string, value:any) {
-        this.msgObj[id] = value;
+    get id() {
+        return this.msgObj.id;
     }
 
     get clientId() {
@@ -23,24 +28,38 @@ export class WallPostImpl implements WallPost {
     get ingestionDate() {
         return this.msgObj.ingestionDate;
     }
-
-    batchUpdate() {
-        let updates:object[] = [];
-        const deferredModel: DeferredModel = {
-            set: (name:string, value:any) => {
-                updates.push({
-                    [name]: value
-                })
-                return deferredModel;
-            },
-            save: () => {
-                // loop through changes and submit updates together
-            }
-        };
-        return deferredModel;
+    
+    get messageType() {
+        return 'WALL_POST';
     }
 
-    onChange(eventName:string, prop:string, callback:ModelCallback<WallPost>) {
+    update(newMessageProps:WritableWallPostMessageProps) {
+        // Update only the user pretty name when alias changed
+        this.msgObj.text = newMessageProps.text;
+        batchNotifyListeners('userPrettyName', this.listeners);
+        return Promise.resolve(this);
+    }
+
+    like() {
+        return Promise.resolve(this);
+    }
+
+    share() {
+        return Promise.resolve(this);
+    }
+
+    onChange(eventName:string, prop:string, callback:ModelCallback<SocialMessage>) {
+        // The demo implementation ignores created and deleted events, and only cares
+        // about the onUpdated event
+
+        // register listeners
+        if (eventName === ModelEvent.onUpdated) {
+            if (!this.listeners[prop]) {
+                this.listeners[prop] = [callback];
+            } else {
+                this.listeners[prop].push(callback);
+            }
+        }
     }
 
     toJSON() {
@@ -52,15 +71,26 @@ export class WallPostImpl implements WallPost {
     }
 }
 
+/**
+ * A reference implementation of SocialMessage
+ */
 export class SocialMessageImpl implements SocialMessage {
     private msgObj: {[key:string]: any}
+    private listeners : {[key:string]: ModelCallback<SocialMessage>[]}
 
-    get(id:string) {
-        return this.msgObj[id];
+    constructor(props: {[key:string]: any}) {
+        for (let key of props.keys()) {
+            this.msgObj[key] = props;
+        }
+        this.listeners = {};
     }
 
-    set(id:string, value:any) {
-        this.msgObj[id] = value;
+    get id() {
+        return this.msgObj.id;
+    }
+
+    get messageType() {
+        return 'SOCIAL_MESSAGE';
     }
 
     get clientId() {
@@ -79,23 +109,57 @@ export class SocialMessageImpl implements SocialMessage {
         return this.msgObj.attachments;
     }
 
-    batchUpdate() {
-        let updates:object[] = [];
-        const deferredModel: DeferredModel = {
-            set: (name:string, value:any) => {
-                updates.push({
-                    [name]: value
-                })
-                return deferredModel;
-            },
-            save: () => {
-                // loop through changes and submit updates together
-            }
-        };
-        return deferredModel;
+    get isChime() {
+        return this.msgObj.isChime;
+    }
+
+    get isHighlighted() {
+        return this.msgObj.isHighlighted;
+    }
+
+    get isReadByMe() {
+        return this.msgObj.isReadByMe;
+    }
+
+    get isReadByOthers() {
+        return this.msgObj.isReadByOthers;
+    }
+
+    get isSuppressed() {
+        return this.msgObj.isSuppressed;
+    }
+
+    get text() {
+        return this.msgObj.text;
+    }
+
+    get userId() {
+        return this.msgObj.userId;
+    }
+
+    get userPrettyName() {
+        return this.msgObj.userPrettyName;
+    }
+
+    update(newMessageProps:WritableSocialMessageProps) {
+        // Update only the user pretty name when alias changed
+        this.msgObj.userPrettyName = newMessageProps.userPrettyName;
+        batchNotifyListeners('userPrettyName', this.listeners);
+        return Promise.resolve(this);
     }
 
     onChange(eventName:string, prop:string, callback:ModelCallback<SocialMessage>) {
+        // The demo implementation ignores created and deleted events, and only cares
+        // about the onUpdated event
+
+        // register listeners
+        if (eventName === ModelEvent.onUpdated) {
+            if (!this.listeners[prop]) {
+                this.listeners[prop] = [callback];
+            } else {
+                this.listeners[prop].push(callback);
+            }
+        }
     }
 
     toJSON() {

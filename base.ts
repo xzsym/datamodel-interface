@@ -1,5 +1,5 @@
 
-enum ModelEvent {
+export enum ModelEvent {
     onCreate = "onCreate",
     onCreated = "onCreated",
     onDelete = "onDelete",
@@ -8,7 +8,7 @@ enum ModelEvent {
     onUpdated = "onUpdated",
 }
 
-enum CollectionEvent {
+export enum CollectionEvent {
     onAdded = "onAdded",
     onDeleted = "onDeleted",
 }
@@ -26,6 +26,7 @@ export interface CollectionCallback<T> {
  * to the changes of data
  */
 export interface Model {
+    readonly id: string;
     onChange(eventName: ModelEvent, prop: string, changeFunction: ModelCallback<Model>):void;
     update(modelProps:{[key: string]: any}): Promise<Model>;
     toJSON(): Object;

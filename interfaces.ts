@@ -1,22 +1,25 @@
 
 import { Model, Collection } from './base';
 
-enum PersistanceStatus {
+export enum PersistanceStatus {
     CREATED = "CREATED",
     CREATING = "CREATING",
     FAILED = "FAILED",
 }
 
-enum MessageType {
+export enum MessageType {
     MAESTRO = "MAESTRO",
     SOCIALMESSAGE = "SOCIALMESSAGE"
 }
 
+// The idea of creating the WritableMessageProps is to type check
+// the parameters passed into the update method of Model subclass
+// If the Model subclass has extra props, then extends the WritableMessageProps
+// to add custom props there.
 export interface WritableMessageProps {
 }
 
 export interface Message extends Model {
-    readonly id: string;
     clientId: string;
     streamId: string;
     ingestionDate: number;
@@ -26,7 +29,7 @@ export interface Message extends Model {
     update(modelProps:WritableMessageProps): Promise<Message>;
 }
 
-enum MaestroEvent {
+export enum MaestroEvent {
     CREATE_ROOM = "CREATE_ROOM",
     JOIN_ROOM = "JOIN_ROOM",
 }
@@ -34,6 +37,10 @@ enum MaestroEvent {
 export interface MestroMessage extends Message {
     event: MaestroEvent;
     maestroObject: Object; //TODO: define interface for it
+}
+
+export interface WritableSocialMessageProps extends WritableMessageProps {
+    userPrettyName: string;
 }
 
 export interface SocialMessage extends Message {
@@ -60,20 +67,27 @@ export interface SocialMessage extends Message {
     text: string;
     userId: number;
     userPrettyName: string;
-    userVerifiedForBadge: boolean;
+    // userVerifiedForBadge: boolean;
+    update(modelProps: WritableSocialMessageProps): Promise<SocialMessage>;
+}
+
+export interface WritableWallPostMessageProps extends WritableMessageProps {
+    text?: string;
 }
 
 export interface WallPost extends Message {
     like(): Promise<WallPost>;
     share(comment:string): Promise<WallPost>;
+    update(modelProps: WritableWallPostMessageProps): Promise<WallPost>;
 }
 
-enum ImageType {
+export enum ImageType {
     JPEG = "image/jpeg",
     PNG = "image/png",
+    // TODO: add more types here
 }
 
-enum AttachmentStatus {
+export enum AttachmentStatus {
     NOT_DOWNLOADED = "NOT_DOWNLOADED",
     DOWNLOADED = "DOWNLOADED"
 }
@@ -96,11 +110,11 @@ export interface Attachment extends Model {
     previewStatus: AttachmentStatus;
 }
 
-interface NewMessageCallback {
+export interface NewMessageCallback {
     (message: Message): void;
 }
 
-enum StreamType {
+export enum StreamType {
     CHATROOM = "CHATROOM",
     IM = "IM/MIM",
 }
@@ -124,12 +138,12 @@ export interface StreamSettings {
 }
 
 export interface Stream extends Model, StreamSettings {
-    readonly id: string;
     type: StreamType;
     isCrossPod: boolean;
     streamSettings: StreamSettings;
 
     getMessages(from: number | null, to: number | null, count: number): Promise<Message[]>;
+    // Use the Collection<User> to monitoring the adding/deleting the users
     getMembers(): Promise<Collection<User>>;
 
     update(settings: StreamSettings): Promise<Stream>;
@@ -137,7 +151,7 @@ export interface Stream extends Model, StreamSettings {
     uploadAttachment(attachment:Attachment): Promise<Attachment>;
     sendMessage(message:Message): Promise<Message>;
 
-    onNewMessage(callback:NewMessageCallback): void;
+    onNewMessage(callback:NewMessageCallback): () => void;
 }
 
 export interface IMStream extends Stream {
@@ -147,7 +161,7 @@ export interface RoomStream extends Stream {
     type: StreamType.CHATROOM;
 }
 
-enum RuleType {
+export enum RuleType {
     KEYWORD = "KEYWORD"
 }
 
@@ -167,8 +181,7 @@ export interface FilterRoleGroup {
     rules: Rule[];
 }
 
-export interface Filter {
-    readonly id: string;
+export interface Filter extends Model {
     name: string;
 
     getMessages(to: number, count: number): Promise<SocialMessage[]>;
@@ -204,7 +217,6 @@ export interface Entitlement {
 }
 
 export interface User extends Model {
-    readonly id: number;
     active: boolean;
     companyName: string;
     defaultImage: string;
@@ -232,29 +244,16 @@ export interface User extends Model {
 
 // ***** Stores *****
 export interface Store<T> {
-    get(id: string): T | null;
+    get(id: string): Promise<T | null>;
 }
 
-// export interface StoreDataCallback<T> {
-//     (data: T, store: Store<T>): void;
-// }
-
-// interface StreamDataListener<T> {
-//     onReceiveData(eventName: string, callback:StoreDataCallback<T>): void;
-// }
-
-// export interface MessageStore extends Store<Message>, StreamDataListener<Message> {
-//     getMessage(id: string): Message | null;
-// }
-
 export interface UserStore extends Store<User> {
-    getUser(id: string): Promise<User | null>;
     findUser(name:string): Promise<User[]>;
 }
 
 export interface StreamStore extends Store<Stream> {
-    getStream(id: string): Stream | null;
     addStream(stream: Stream): Promise<Stream>;
+    getStreams(filter?:StreamType): Collection<Stream>;
 }
 
 // ****** misc *******
