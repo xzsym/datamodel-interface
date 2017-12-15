@@ -11,12 +11,12 @@ messageStore.start();
 
 streamStore.get('yy').then((chatRoom) => {
     if (chatRoom) {
-        chatRoom.onNewMessage((message) => {
+        chatRoom.addNewMessageListener((message) => {
             console.log(`Chatroom ${chatRoom.id} receives a new message`, message);
         });
         
         const messages = chatRoom.getMessages(0, 0, 50).then((messages) => {
-            console.log('All the messages:', messages);
+            console.log(`All the messages in room ${chatRoom.id}:`, messages);
             return messages;
         }).then((messages) => {
             chatRoom.sendReceipt(messages);
@@ -26,7 +26,7 @@ streamStore.get('yy').then((chatRoom) => {
 
 streamStore.get('xx').then((im) => {
     if (im) {
-        im.onNewMessage((message) => {
+        im.addNewMessageListener((message) => {
             console.log(`IM ${im.id} receives a new message`, message);
         });
 

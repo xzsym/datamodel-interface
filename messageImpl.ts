@@ -7,7 +7,8 @@ export class WallPostImpl implements WallPost {
     private listeners : {[key:string]: ModelCallback<SocialMessage>[]}
 
     constructor(props: {[key:string]: any}) {
-        for (let key of props.keys()) {
+        this.msgObj = {};
+        for (let key in props) {
             this.msgObj[key] = props;
         }
         this.listeners = {};
@@ -79,7 +80,8 @@ export class SocialMessageImpl implements SocialMessage {
     private listeners : {[key:string]: ModelCallback<SocialMessage>[]}
 
     constructor(props: {[key:string]: any}) {
-        for (let key of props.keys()) {
+        this.msgObj = {};
+        for (let key in props) {
             this.msgObj[key] = props;
         }
         this.listeners = {};

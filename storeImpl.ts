@@ -22,6 +22,7 @@ export class MessageStore implements StreamDataListener<Message> {
     constructor() {
         this.allMessages = [];
         this.idMap = {};
+        this.listeners = {};
     }
 
     getMessage(id: string): Message | null {
@@ -33,16 +34,18 @@ export class MessageStore implements StreamDataListener<Message> {
     }
 
     saveMessage(message: Message) {
+        this.allMessages.push(message);
         if (this.listeners[message.streamId]) {
             this.listeners[message.streamId](message);
         }
+        console.log('All messages in the store:', this.allMessages);
     }
 
     start() {
         let count = 0;
         // Mock: mocking the stream messages
         setInterval(() => {
-            let streamId = Math.floor(Math.random()*3);
+            let streamId =demoStreamIds[Math.floor(Math.random()*3)];
             let newSocialMessage = new SocialMessageImpl({
                 id: Date.now(),
                 text: `New message: ${count}`,
@@ -51,7 +54,7 @@ export class MessageStore implements StreamDataListener<Message> {
             console.log('Receive message from stream...', newSocialMessage);
             this.saveMessage(newSocialMessage);
             count += 1;
-        }, 100000 * Math.random());
+        }, 10000 * Math.random());
     }
 }
 
@@ -66,6 +69,7 @@ export class StreamStoreImpl implements StreamStore {
     constructor(messageStore: MessageStore, userStore: UserStore) {
         this.messageStore = messageStore;
         this.userStore = userStore;
+        this.streams = {};
 
         // Mock, create 3 streams
         let imOne = new IMStreamImpl({id: demoStreamIds[0]});
@@ -80,13 +84,13 @@ export class StreamStoreImpl implements StreamStore {
         this.allCollection = new CollectionBase<Stream>([imOne, roomOne, roomTwo]);
 
         // register message listener
-        imOne.onNewMessage((message) => {
+        imOne.addNewMessageListener((message) => {
             messageStore.saveMessage(message);
         });
-        roomOne.onNewMessage((message) => {
+        roomOne.addNewMessageListener((message) => {
             messageStore.saveMessage(message);
         });
-        roomTwo.onNewMessage((message) => {
+        roomTwo.addNewMessageListener((message) => {
             messageStore.saveMessage(message);
         });
     }

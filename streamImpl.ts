@@ -75,7 +75,7 @@ export class StreamImpl implements Stream {
         return Promise.resolve(message);
     }
 
-    onNewMessage(callback: NewMessageCallback) {
+    addNewMessageListener(callback: NewMessageCallback) {
         let lisnterId = `listener${this.listnersCount}`;
         this.listeners[lisnterId] = callback;
         this.listnersCount += 1;
@@ -99,6 +99,8 @@ export class StreamImpl implements Stream {
         for (let key in this.listeners) {
             this.listeners[key](message);
         }
+
+        console.log(`Stream ${this.id} has messages:`, message);
     }
 }
 

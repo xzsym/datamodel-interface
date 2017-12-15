@@ -151,7 +151,7 @@ export interface Stream extends Model, StreamSettings {
     uploadAttachment(attachment:Attachment): Promise<Attachment>;
     sendMessage(message:Message): Promise<Message>;
 
-    onNewMessage(callback:NewMessageCallback): () => void;
+    addNewMessageListener(callback:NewMessageCallback): () => void;
 }
 
 export interface IMStream extends Stream {
