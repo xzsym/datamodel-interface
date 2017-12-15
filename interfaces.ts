@@ -34,7 +34,7 @@ export enum MaestroEvent {
     JOIN_ROOM = "JOIN_ROOM",
 }
 
-export interface MestroMessage extends Message {
+export interface MaestroMessage extends Message {
     event: MaestroEvent;
     maestroObject: Object; //TODO: define interface for it
 }
