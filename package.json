@@ -14,6 +14,7 @@
     "clean": "rm dist/*.js",
     "compile": "tsc",
     "build": "npm-run-all clean compile --continue-on-error",
+    "deploy": "cp base.ts ../SFE-Lite/SDK/src/ && cp interfaces.ts ../SFE-Lite/SDK/src/datamodel.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
