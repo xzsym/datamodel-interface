@@ -1,4 +1,4 @@
-import { Model, Collection, CollectionEvent, CollectionCallback } from './base';
+import { Model, Collection, CollectionEvent, CollectionCallback } from '../base';
 
 export class CollectionBase<T extends Model> implements Collection<T> {
     private models: Array<T>;

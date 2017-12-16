@@ -236,10 +236,10 @@ export interface User extends Model {
     title: string;
     verifiedForBadge: boolean;
 
-    getWallPosts(): Collection<WallPost>;
-    getRooms(): Promise<RoomStream[]>;
-    getSignals(): Promise<Signal[]>;
-    onPresenceUpdated(callback:PrescenceUpdateCallback):void;
+    getWallPosts(): Promise<Collection<WallPost>>;
+    getRooms(): Promise<Collection<RoomStream>>;
+    getSignals(): Promise<Collection<Signal>>;
+    addPresenceUpdateListener(callback:PrescenceUpdateCallback): () => void;
 }
 
 // ***** Stores *****

@@ -1,5 +1,5 @@
 import { MessageStore, StreamStoreImpl, UserStoreImpl } from './storeImpl';
-import { SocialMessage } from './interfaces';
+import { SocialMessage } from '../datamodel';
 import { SocialMessageImpl } from './messageImpl';
 
 const messageStore = new MessageStore();

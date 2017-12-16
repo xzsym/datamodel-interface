@@ -1,5 +1,5 @@
-import { User, Stream, SocialMessage, Message, Attachment, StreamType, StreamSettings, NewMessageCallback, IMStream, RoomStream } from './interfaces';
-import { Model, ModelCallback, ModelEvent, Collection } from './base';
+import { User, Stream, SocialMessage, Message, Attachment, StreamType, StreamSettings, NewMessageCallback, IMStream, RoomStream } from '../datamodel';
+import { Model, ModelCallback, ModelEvent, Collection } from '../base';
 import { CollectionBase } from './baseImpl';
 import { SocialMessageImpl } from './messageImpl';
 import { Transport } from './requests';

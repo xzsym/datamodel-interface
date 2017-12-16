@@ -1,5 +1,5 @@
-import { Collection, CollectionCallback } from './base';
-import { Store, StreamStore, UserStore, Message, Stream, User, StreamType } from './interfaces';
+import { Collection, CollectionCallback } from '../base';
+import { Store, StreamStore, UserStore, Message, Stream, User, StreamType } from '../datamodel';
 import { SocialMessageImpl } from './messageImpl';
 import { RoomStreamImpl, IMStreamImpl } from './streamImpl';
 import { CollectionBase } from './baseImpl';

@@ -1,5 +1,5 @@
-import { ModelCallback, ModelEvent } from './base';
-import { WallPost, SocialMessage, WritableSocialMessageProps, WritableWallPostMessageProps } from './interfaces';
+import { ModelCallback, ModelEvent } from '../base';
+import { WallPost, SocialMessage, WritableSocialMessageProps, WritableWallPostMessageProps } from '../datamodel';
 import { batchNotifyListeners } from './utils';
 
 export class WallPostImpl implements WallPost {
