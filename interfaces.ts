@@ -260,3 +260,5 @@ export interface StreamStore extends Store<Stream> {
 export interface ApplicationSettings {
     setTheme(): void;
 }
+
+export * from './base';
