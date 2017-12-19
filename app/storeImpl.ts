@@ -74,9 +74,9 @@ export class StreamStoreImpl implements StreamStore {
         // Mock, create 3 streams
         let imOne = new IMStreamImpl({id: demoStreamIds[0]});
         this.streams[demoStreamIds[0]] = imOne;
-        let roomOne = new RoomStreamImpl({id: demoStreamIds[0]});
+        let roomOne = new RoomStreamImpl({id: demoStreamIds[1]});
         this.streams[demoStreamIds[1]] = roomOne;
-        let roomTwo = new RoomStreamImpl({id: demoStreamIds[0]});
+        let roomTwo = new RoomStreamImpl({id: demoStreamIds[2]});
         this.streams[demoStreamIds[2]] = roomTwo;
 
         this.imsCollection = new CollectionBase<Stream>([imOne]);
