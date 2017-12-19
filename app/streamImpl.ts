@@ -102,6 +102,11 @@ export class StreamImpl implements Stream {
 
         console.log(`Stream ${this.id} has messages:`, message);
     }
+
+    // data from stream, store already has it
+    appendMessage(message: Message) {
+        this.messages.push(message);
+    }
 }
 
 export class IMStreamImpl extends StreamImpl implements IMStream {

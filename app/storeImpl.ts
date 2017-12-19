@@ -1,7 +1,7 @@
 import { Collection, CollectionCallback } from '../base';
 import { Store, StreamStore, UserStore, Message, Stream, User, StreamType } from '../datamodel';
 import { SocialMessageImpl } from './messageImpl';
-import { RoomStreamImpl, IMStreamImpl } from './streamImpl';
+import { StreamImpl, RoomStreamImpl, IMStreamImpl } from './streamImpl';
 import { CollectionBase } from './baseImpl';
 
 export interface StoreDataCallback<T> {
@@ -74,6 +74,7 @@ export class StreamStoreImpl implements StreamStore {
         // Mock, create 3 streams
         let imOne = new IMStreamImpl({id: demoStreamIds[0]});
         this.streams[demoStreamIds[0]] = imOne;
+
         let roomOne = new RoomStreamImpl({id: demoStreamIds[1]});
         this.streams[demoStreamIds[1]] = roomOne;
         let roomTwo = new RoomStreamImpl({id: demoStreamIds[2]});
@@ -92,6 +93,13 @@ export class StreamStoreImpl implements StreamStore {
         });
         roomTwo.addNewMessageListener((message) => {
             messageStore.saveMessage(message);
+        });
+
+        // add message listener to the store
+        [imOne, roomOne, roomTwo].forEach((stream: StreamImpl) => {
+            messageStore.onReceiveData(stream.id, (message: Message) => {
+                stream.appendMessage(message);
+            })
         });
     }
 
