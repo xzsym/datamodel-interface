@@ -195,7 +195,7 @@ export interface Signal extends Filter {
     createDate: number;
 }
 
-enum PresenceStatus {
+export enum PresenceStatus {
     Avaialable = "Available",
     Away = "Away",
     InAMeeting = "In a meeting",

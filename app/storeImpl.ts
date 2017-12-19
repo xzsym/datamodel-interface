@@ -8,7 +8,7 @@ export interface StoreDataCallback<T> {
     (data: T): void;
 }
 
-interface StreamDataListener<T> {
+export interface StreamDataListener<T> {
     onReceiveData(streamId: string, callback:StoreDataCallback<T>): void;
 }
 
