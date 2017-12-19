@@ -4,7 +4,7 @@ import { batchNotifyListeners } from './utils';
 
 export class WallPostImpl implements WallPost {
     private msgObj: {[key:string]: any}
-    private listeners : {[key:string]: ModelCallback<SocialMessage>[]}
+    private listeners : {[key:string]: ModelCallback<WallPost>[]}
 
     constructor(props: {[key:string]: any}) {
         this.msgObj = {};
@@ -37,7 +37,7 @@ export class WallPostImpl implements WallPost {
     update(newMessageProps:WritableWallPostMessageProps) {
         // Update only the user pretty name when alias changed
         this.msgObj.text = newMessageProps.text;
-        batchNotifyListeners('userPrettyName', this.listeners);
+        batchNotifyListeners<WallPost>('userPrettyName', this.listeners, this);
         return Promise.resolve(this);
     }
 
@@ -49,7 +49,7 @@ export class WallPostImpl implements WallPost {
         return Promise.resolve(this);
     }
 
-    onChange(eventName:string, prop:string, callback:ModelCallback<SocialMessage>) {
+    onChange(eventName:string, prop:string, callback:ModelCallback<WallPost>) {
         // The demo implementation ignores created and deleted events, and only cares
         // about the onUpdated event
 
@@ -143,7 +143,7 @@ export class SocialMessageImpl implements SocialMessage {
     update(newMessageProps:WritableSocialMessageProps) {
         // Update only the user pretty name when alias changed
         this.msgObj.userPrettyName = newMessageProps.userPrettyName;
-        batchNotifyListeners('userPrettyName', this.listeners);
+        batchNotifyListeners<SocialMessage>('userPrettyName', this.listeners, this);
         return Promise.resolve(this);
     }
 

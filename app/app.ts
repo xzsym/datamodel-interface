@@ -1,6 +1,6 @@
-import { MessageStore, StreamStoreImpl, UserStoreImpl } from './storeImpl';
+import { MessageStore, StreamStoreImpl, UserStoreImpl } from '../impl/storeImpl';
 import { SocialMessage } from '../datamodel';
-import { SocialMessageImpl } from './messageImpl';
+import { SocialMessageImpl } from '../impl/messageImpl';
 
 const messageStore = new MessageStore();
 const userStore = new UserStoreImpl();
